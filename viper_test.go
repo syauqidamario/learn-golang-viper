@@ -26,3 +26,31 @@ func TestJSON(t *testing.T){
 	assert.Equal(t, 3306, config.GetInt("database.port"))
 	assert.True(t, config.GetBool("database.show_sql"))
 }
+
+func TestYAML(t *testing.T){
+	config := viper.New()
+	config.SetConfigFile("config.yaml")
+	config.AddConfigPath(".")
+	err := config.ReadInConfig()
+	assert.Nil(t, err)
+	assert.Equal(t, "learn-golang-viper", config.GetString("app.name"))
+	assert.Equal(t, "Syauqi D. Djohan", config.GetString("app.author"))
+	assert.Equal(t, 3306, config.GetInt("database.port"))
+	assert.True(t, config.GetBool("database.show_sql"))
+}
+
+func TestENVFile(t *testing.T) {
+	config := viper.New()
+	config.SetConfigFile("config.env")
+	config.AddConfigPath(".")
+
+	// read config
+	err := config.ReadInConfig()
+	assert.Nil(t, err)
+
+	assert.Equal(t, "learn-golang-viper", config.GetString("APP_NAME"))
+	assert.Equal(t, "Syauqi D. Djohan", config.GetString("APP_AUTHOR"))
+	assert.Equal(t, "localhost", config.GetString("DATABASE_HOST"))
+	assert.Equal(t, 3306, config.GetInt("DATABASE_PORT"))
+	assert.Equal(t, true, config.GetBool("DATABASE_SHOW_SQL"))
+}
